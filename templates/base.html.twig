@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title>{% block title %}Acque D'Italia{% endblock %}</title>
+
+    <meta name="description" content="Acque D'Italia">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Open Graph Meta -->
+    <meta property="og:title" content="Acque D'Italia">
+    <meta property="og:site_name" content="Acque D'Italia">
+    <meta property="og:description" content="Acque D'Italia">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+    <!-- Icons -->
+    <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+    <link rel="shortcut icon" href="assets/media/favicons/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/media/favicons/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/media/favicons/apple-touch-icon-180x180.png">
+    <!-- END Icons -->
+
+    <!-- Stylesheets -->
+    <!-- Fonts and OneUI framework -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    {{ encore_entry_link_tags('app') }}
+
+    <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
+    <!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/amethyst.min.css"> -->
+    <!-- END Stylesheets -->
+</head>
+<body>
+
+<div id="page-container">
+
+    {% block sidebar %}
+        {% include 'sidebar.html.twig' %}
+    {% endblock %}
+
+    {% block header %}
+        {% include 'header.html.twig' %}
+    {% endblock %}
+
+    {% block body %}
+    <!-- Main Container -->
+    <main id="main-container">
+        <!-- Hero -->
+        <div class="bg-body-light">
+            <div class="content content-full">
+                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center py-2">
+                    <div class="flex-grow-1">
+                        <h1 class="h3 fw-bold mb-2">
+                            Blank
+                        </h1>
+                        <h2 class="fs-base lh-base fw-medium text-muted mb-0">
+                            That feeling of delight when you start your awesome new project!
+                        </h2>
+                    </div>
+                    <nav class="flex-shrink-0 mt-3 mt-sm-0 ms-sm-3" aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-alt">
+                            <li class="breadcrumb-item">
+                                <a class="link-fx" href="javascript:void(0)">Generic</a>
+                            </li>
+                            <li class="breadcrumb-item" aria-current="page">
+                                Blank
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- END Hero -->
+
+        <!-- Page Content -->
+        <div class="content">
+            <h2 class="content-heading">Your Content <small>Subtitle</small></h2>
+            <p>
+                ...
+            </p>
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+    {% endblock %}
+
+    {% block footer %}
+        {% include 'footer.html.twig' %}
+    {% endblock %}
+
+</div>
+<!--
+    OneUI JS
+
+    Core libraries and functionality
+    webpack is putting everything together at assets/_js/main/app.js
+-->
+{{ encore_entry_script_tags('app') }}
+</body>
+</html>
