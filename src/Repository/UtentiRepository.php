@@ -31,4 +31,5 @@ class UtentiRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
 }

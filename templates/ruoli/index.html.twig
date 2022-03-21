@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comuni{% endblock %}
+
+{% block body %}
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <!-- Hero -->
+        <div class="bg-body-light">
+            <div class="content content-full">
+                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center py-2">
+                    <div class="flex-grow-1">
+                        <h1 class="h3 fw-bold mb-2">
+                            Ruoli
+                        </h1>
+                        <h2 class="fs-base lh-base fw-medium text-muted mb-0">
+                            Tables transformed with dynamic features.
+                        </h2>
+                    </div>
+                    <nav class="flex-shrink-0 mt-3 mt-sm-0 ms-sm-3" aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-alt">
+                            <li class="breadcrumb-item">
+                                <a class="link-fx" href="javascript:void(0)">Tables</a>
+                            </li>
+                            <li class="breadcrumb-item" aria-current="page">
+                                DataTables
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- END Hero -->
+
+        <!-- Page Content -->
+        <div class="content">
+
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title"><small>Elenco ruoli</small></h3>
+                </div>
+                <div class="block-content block-content-full">
+                    {% if ruoli is defined %}
+                    <table class="table table-hover table-vcenter">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th class="d-none d-sm-table-cell">Nome</th>
+                            <th class="d-none d-sm-table-cell">Utenti</th>
+                            <th class="d-none d-sm-table-cell">Classe</th>
+                            <th style="width: 5%;">Opzioni</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ruolo in ruoli %}
+                            <tr>
+                                <td class="fw-semibold fs-sm">{{ ruolo.id }}</td>
+                                <td>
+                                    <span class="text-muted fs-sm">{{ ruolo.nome }}</span>
+                                </td>
+                                <td>
+                                    <span class="text-muted fs-sm">{{ ruolo.totale_utenti }}</span>
+                                </td>
+                                <td>
+                                    <span class="fs-xs fw-semibold d-inline-block py-1 px-3 rounded-pill {{ ruolo.classe }}">{{ ruolo.classe }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" title="" data-bs-original-title="Edit">
+                                            <i class="fa fa-fw fa-pencil-alt"></i>
+                                        </a>
+                                        <a href="" type="button" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" title="" data-bs-original-title="Delete">
+                                            <i class="fa fa-fw fa-times"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+
+{% endblock %}

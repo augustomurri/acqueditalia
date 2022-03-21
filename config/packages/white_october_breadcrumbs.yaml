@@ -1,0 +1,7 @@
+white_october_breadcrumbs:
+    listClass: 'breadcrumb breadcrumb-alt'
+    separator:          ''
+    separatorClass:     'separator'
+    listId:             ''
+    itemClass:          'breadcrumb-item'
+    linkRel:            ''

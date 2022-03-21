@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Stazioni;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Stazioni|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,37 +15,42 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class StazioniRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Stazioni::class);
+        $this->security = $security;
     }
 
-    // /**
-    //  * @return Stazioni[] Returns an array of Stazioni objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getStazioni()
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $query = $this->createQueryBuilder('s')
+            //->select('s.id, s.nome, u.id, u.nome AS nome_gestore, c.nome AS nome_comune, COUNT(s.id) AS totale_erogazioni')
+            ->select('s, u, c, COUNT(e.id) AS totale_erogazioni')
+            ->leftJoin('s.gestore', 'u')
+            ->leftJoin('s.comune', 'c')
+            ->leftJoin('s.erogazioni', 'e')
+            //->groupBy('s.id, c.nome, s.id, u.id')
+            ->groupBy('s, u, c')
+            ->orderBy('s.nome', 'ASC');
 
-    /*
-    public function findOneBySomeField($value): ?Stazioni
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $utente = $this->security->getUser();
+
+        /*
+        if ($this->security->isGranted('ROLE_MANAGER')) {
+            $query->where('u.gestore = :current_gestore');
+            $query->setParameter('current_gestore', $utente);
+        }
+
+        if ($this->security->isGranted('ROLE_CUSTOMER')) {
+            $query->where('u.id = :current_utente');
+            $query->setParameter('current_utente', $utente);
+        }
+        */
+
+        $query = $query->getQuery();
+
+        return $query;
     }
-    */
 }

@@ -8,35 +8,59 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"={
+ *               "path"="/utenti/"
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *              "path"="/utenti/{id}"
+ *          },
+ *          "put"={
+ *              "path"="/utenti/{id}"
+ *          }
+ *      },
+ * ))
  * @ORM\Entity(repositoryClass=UtentiRepository::class)
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Utenti implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Utenti::class, inversedBy="utenti", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true, columnDefinition="INT NULL DEFAULT 0")
+     * @ORM\ManyToOne(targetEntity=Utenti::class, inversedBy="utenti")
      */
     private $gestore;
 
     /**
-     * @ORM\OneToOne(targetEntity=Utenti::class, mappedBy="gestore", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Utenti::class, mappedBy="gestore")
      */
     private $utenti;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Comuni::class, inversedBy="utenti")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $comune;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -52,12 +76,32 @@ class Utenti implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $apitoken;
+    private $nome;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $cognome;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $codice_fiscale;
 
     /**
      * @ORM\Column(type="float", options={"default": "0"})
      */
     private $credito = 0;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $apitoken;
 
     /**
      * @ORM\Column(type="boolean", options={"default": "1"})
@@ -70,25 +114,48 @@ class Utenti implements UserInterface, PasswordAuthenticatedUserInterface
     private $ultimo_login;
 
     /**
-     * @ORM\OneToMany(targetEntity=Tessere::class, mappedBy="utente")
+     * @ORM\OneToMany(targetEntity=Tessere::class, mappedBy="utente", orphanRemoval=true)
      */
     private $tessere;
 
     /**
-     * @ORM\OneToMany(targetEntity=Transazioni::class, mappedBy="operatore")
+     * @ORM\OneToMany(targetEntity=Transazioni::class, mappedBy="operatore", orphanRemoval=true)
      */
     private $transazioni;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\OneToMany(targetEntity=Transazioni::class, mappedBy="utente", orphanRemoval=true)
      */
-    private $isVerified = false;
+    private $accrediti;
 
     /**
      * @ORM\ManyToOne(targetEntity=Ruoli::class, inversedBy="utenti")
      * @ORM\JoinColumn(nullable=false, columnDefinition="INT NOT NULL DEFAULT 2")
      */
     private $ruolo;
+
+    /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     */
+    protected $deletedAt;
 
     /**
      * @ORM\PrePersist
@@ -99,50 +166,24 @@ class Utenti implements UserInterface, PasswordAuthenticatedUserInterface
         if (empty($this->ruolo)) {
             $this->ruolo = $event->getEntityManager()->getReference('App\Entity\Ruoli', 4);
         }
-
-        if (empty($this->gestore)) {
-            $this->gestore = $event->getEntityManager()->getReference('App\Entity\Utenti', 1);
-        }
     }
 
     public function __construct()
     {
         $this->tessere = new ArrayCollection();
         $this->transazioni = new ArrayCollection();
+        $this->accrediti = new ArrayCollection();
+        $this->utenti = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function __toString()
+    {
+        return $this->getNome()." ".$this->getCognome();
+    }
+
+    public function getId(): ?Uuid
     {
         return $this->id;
-    }
-
-    public function getGestore(): self
-    {
-        return $this->gestore;
-    }
-
-    public function setGestore(self $gestore): self
-    {
-        $this->gestore = $gestore;
-
-        return $this;
-    }
-
-    public function getUtenti(): ?self
-    {
-        return $this->utenti;
-    }
-
-    public function setUtenti(self $utenti): self
-    {
-        // set the owning side of the relation if necessary
-        if ($utenti->getGestore() !== $this) {
-            $utenti->setGestore($this);
-        }
-
-        $this->utenti = $utenti;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -178,12 +219,12 @@ class Utenti implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -195,8 +236,7 @@ class Utenti implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        return array('ROLE_USER');
-        //return $this->ruolo->toArray();
+        return [$this->ruolo->getRole()];
     }
 
     public function setRoles(array $roles): self
@@ -356,6 +396,166 @@ class Utenti implements UserInterface, PasswordAuthenticatedUserInterface
         $this->ruolo = $ruolo;
 
         return $this;
+    }
+
+    public function getComune(): ?Comuni
+    {
+        return $this->comune;
+    }
+
+    public function setComune(?Comuni $comune): self
+    {
+        $this->comune = $comune;
+
+        return $this;
+    }
+
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+
+    public function setNome(?string $nome): self
+    {
+        $this->nome = $nome;
+
+        return $this;
+    }
+
+    public function getCognome(): ?string
+    {
+        return $this->cognome;
+    }
+
+    public function setCognome(?string $cognome): self
+    {
+        $this->cognome = $cognome;
+
+        return $this;
+    }
+
+    public function getCodiceFiscale(): ?string
+    {
+        return $this->codice_fiscale;
+    }
+
+    public function setCodiceFiscale(string $codice_fiscale): self
+    {
+        $this->codice_fiscale = $codice_fiscale;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Transazioni>
+     */
+    public function getAccrediti(): Collection
+    {
+        return $this->accrediti;
+    }
+
+    public function addAccrediti(Transazioni $accrediti): self
+    {
+        if (!$this->accrediti->contains($accrediti)) {
+            $this->accrediti[] = $accrediti;
+            $accrediti->setUtente($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccrediti(Transazioni $accrediti): self
+    {
+        if ($this->accrediti->removeElement($accrediti)) {
+            // set the owning side to null (unless already changed)
+            if ($accrediti->getUtente() === $this) {
+                $accrediti->setUtente(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getGestore(): ?self
+    {
+        return $this->gestore;
+    }
+
+    public function setGestore(?self $gestore): self
+    {
+        $this->gestore = $gestore;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getUtenti(): Collection
+    {
+        return $this->utenti;
+    }
+
+    public function addUtenti(self $utenti): self
+    {
+        if (!$this->utenti->contains($utenti)) {
+            $this->utenti[] = $utenti;
+            $utenti->setGestore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtenti(self $utenti): self
+    {
+        if ($this->utenti->removeElement($utenti)) {
+            // set the owning side to null (unless already changed)
+            if ($utenti->getGestore() === $this) {
+                $utenti->setGestore(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getAvatar() {
+
+        $avatarGenerator = new InitialAvatar();
+        $params['avatar'] = $avatarGenerator
+            ->name($this->__toString())
+            ->size(64)
+            ->background('#232e3e')
+            ->generate()
+            ->stream('data-url', 80);
+
     }
 
 }

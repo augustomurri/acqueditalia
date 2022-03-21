@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utente{% endblock %}
+
+{% block body %}
+
+    <!-- Main Container -->
+    <main id="main-container">
+
+        <!-- Hero -->
+        <div class="bg-image" style="background-image: url('assets/media/photos/photo10@2x.jpg');">
+            <div class="bg-primary-dark-op">
+                <div class="content content-full text-center">
+                    <div class="my-3">
+                        <img class="img-avatar img-avatar-thumb" src="{{ avatar }}" alt="">
+                    </div>
+                    <h1 class="h2 text-white mb-0">{{ utente.nome }} {{ utente.cognome }}</h1>
+                    <h2 class="h4 fw-normal text-white-75">
+                        {{ utente.ruolo.nome }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <!-- END Hero -->
+
+        <!-- Page Content -->
+        <div class="content content-boxed">
+
+            {% if form_profilo is defined %}
+            <!-- Utente Profilo -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Profilo Utente</h3>
+                </div>
+                <div class="block-content">
+                    {{ form_start(form_profilo) }}
+                        <div class="row push">
+                            <div class="col-lg-4">
+                                <p class="fs-sm text-muted">
+                                    Informazioni essenziali del tuo account
+                                </p>
+                            </div>
+                            <div class="col-lg-8 col-xl-5">
+                                <div class="row mb-4">
+                                    <div class="col-6">
+                                        {{ form_label(form_profilo.nome) }}
+                                        {{ form_widget(form_profilo.nome) }}
+                                    </div>
+                                    <div class="col-6">
+                                        {{ form_label(form_profilo.cognome) }}
+                                        {{ form_widget(form_profilo.cognome) }}
+                                    </div>
+                                </div>
+                                {{ form_row(form_profilo.email) }}
+                                {{ form_row(form_profilo.codice_fiscale) }}
+                                {{ form_row(form_profilo.comune) }}
+                                <div class="mb-4">
+                                    <button type="submit" class="btn btn-alt-primary">
+                                        Aggiorna
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {{ form_end(form_profilo) }}
+                </div>
+            </div>
+            <!-- END Utente Profilo -->
+            {% endif %}
+
+            {% if form_profilo is defined %}
+            <!-- Password Profilo -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Modifica Password</h3>
+                </div>
+                <div class="block-content">
+                    {{ form_start(form_password) }}
+                    <div class="row push">
+                        <div class="col-lg-4">
+                            <p class="fs-sm text-muted">
+                                La modifica della password di accesso è un modo semplice per proteggere il tuo account.
+                            </p>
+                        </div>
+                        <div class="col-lg-8 col-xl-5">
+                            {{ form_row(form_password.password.first) }}
+                            {{ form_row(form_password.password.second) }}
+                            <div class="mb-4">
+                                <button type="submit" class="btn btn-alt-primary">
+                                    Aggiorna
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(form_password) }}
+                </div>
+            </div>
+            <!-- END Password Profilo -->
+            {% endif %}
+
+            {% if form_manage is defined %}
+            <!-- Gestione profilo -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Gestione profilo</h3>
+                </div>
+                <div class="block-content">
+                    {{ form_start(form_manage) }}
+                        <div class="row push">
+                            <div class="col-lg-4">
+                                <p class="fs-sm text-muted">
+                                    Your billing information is never shown to other users and only used for creating your invoices.
+                                </p>
+                            </div>
+                            <div class="col-lg-8 col-xl-5">
+                                {{ form_row(form_manage.gestore) }}
+                                {{ form_row(form_manage.ruolo) }}
+                                {{ form_row(form_manage.apitoken) }}
+                                {{ form_row(form_manage.attivo) }}
+                                {{ form_row(form_manage.isVerified) }}
+                                <div class="mb-4">
+                                    <button type="submit" class="btn btn-alt-primary">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {{ form_end(form_manage) }}
+                </div>
+            </div>
+            <!-- END Gestione profilo -->
+            {% endif %}
+
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+
+{% endblock %}

@@ -12,10 +12,6 @@
         "chart.js": "^3.7.0",
         "ckeditor4": "^4.17.1",
         "cropperjs": "^1.5.12",
-        "datatables.net": "^1.11.4",
-        "datatables.net-bs5": "^1.11.4",
-        "datatables.net-responsive": "^2.2.9",
-        "datatables.net-responsive-bs5": "^2.2.9",
         "dropzone": "^5.9.3",
         "easy-pie-chart": "^2.1.7",
         "flatpickr": "^4.6.9",
@@ -46,6 +42,7 @@
         "@symfony/stimulus-bridge": "^3.0.0",
         "@symfony/webpack-encore": "^1.7.0",
         "core-js": "^3.0.0",
+        "file-loader": "^6.2.0",
         "regenerator-runtime": "^0.13.2",
         "webpack-notifier": "^1.6.0"
     },

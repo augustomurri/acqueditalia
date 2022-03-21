@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Comuni;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Comuni|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,37 +15,36 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ComuniRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Comuni::class);
+        $this->security = $security;
     }
 
-    // /**
-    //  * @return Comuni[] Returns an array of Comuni objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getComuni()
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $query = $this->createQueryBuilder('c')
+            ->select('c.id, c.nome, COUNT(s) AS totale_stazioni, COUNT(u) AS totale_utenti')
+            ->leftJoin('c.stazioni', 's')
+            ->leftJoin('c.utenti', 'u')
+            ->groupBy('c.id');
 
-    /*
-    public function findOneBySomeField($value): ?Comuni
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $utente = $this->security->getUser();
+
+        if ($this->security->isGranted('ROLE_MANAGER')) {
+            $query->where('u.gestore = :current_gestore');
+            $query->setParameter('current_gestore', $utente);
+        }
+
+        if ($this->security->isGranted('ROLE_CUSTOMER')) {
+            $query->where('u.id = :current_utente');
+            $query->setParameter('current_utente', $utente);
+        }
+
+        $query = $query->getQuery();
+
+        return $query;
     }
-    */
 }

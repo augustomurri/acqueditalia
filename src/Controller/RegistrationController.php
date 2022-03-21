@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Ruoli;
 use App\Entity\Utenti;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
@@ -38,21 +39,29 @@ class RegistrationController extends AbstractController
             $user->setPassword(
             $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $form->get('password')->getData()
                 )
             );
+
+            $ruolo = $entityManager->getRepository(Ruoli::class)->findOneBy(['ruolo' => 'ROLE_CUSTOMER']);
+            $user->setRuolo($ruolo);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('verifica_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('info@augustomurri.it', 'Acque D\'Italia'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
+            try {
+
+                $this->emailVerifier->sendEmailConfirmation('verifica_email', $user,
+                    (new TemplatedEmail())
+                        ->from(new Address('info@augustomurri.it', 'Acque D\'Italia'))
+                        ->to($user->getEmail())
+                        ->subject('Please Confirm your Email')
+                        ->htmlTemplate('registration/confirmation_email.html.twig')
+                );
+
+            } catch(\Exception $exception) { }
+
+            $this->addFlash('verify_email_success', 'Clicca nel link di conferma');
 
         }
 

@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Transazioni{% endblock %}
+
+{% block body %}
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <!-- Hero -->
+        <div class="bg-body-light">
+            <div class="content content-full">
+                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center py-2">
+                    <div class="flex-grow-1">
+                        <h1 class="h3 fw-bold mb-2">
+                            Transazioni
+                        </h1>
+                        <h2 class="fs-base lh-base fw-medium text-muted mb-0">
+                            Elenco di tutte le le transazioni effettuate
+                        </h2>
+                    </div>
+                    <nav class="flex-shrink-0 mt-3 mt-sm-0 ms-sm-3" aria-label="breadcrumb">
+                        {{ wo_render_breadcrumbs() }}
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- END Hero -->
+
+        <!-- Page Content -->
+        <div class="content">
+
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title"><small>Elenco transazioni</small></h3>
+                </div>
+                <div class="block-content block-content-full">
+
+                    {% if transazioni is defined %}
+                        <table class="table table-hover table-vcenter">
+                            <thead>
+                            <tr>
+                                <th>{{ knp_pagination_sortable(transazioni, 'Data ora', 't.createdAt') }}</th>
+                                <th class="d-none d-sm-table-cell">{{ knp_pagination_sortable(transazioni, 'Operatore', 'o.nome') }}</th>
+                                <th class="d-none d-sm-table-cell">{{ knp_pagination_sortable(transazioni, 'Utente', 'u.nome') }}</th>
+                                <th class="d-none d-sm-table-cell">Comune</th>
+                                <th class="d-none d-sm-table-cell">{{ knp_pagination_sortable(transazioni, 'Quantità', 't.quantita') }}</th>
+                                <th style="width: 5%;"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for transazione in transazioni %}
+                                <tr>
+                                    <td class="text-muted fs-sm">{{ transazione.createdAt|date() }}</td>
+                                    <td class="fw-semibold fs-sm">
+                                        <a href="#">{{ transazione.operatore.nome }} {{ transazione.operatore.cognome }}</a>
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold fs-sm">{{ transazione.utente.nome }} {{ transazione.utente.cognome }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted fs-sm">{{ transazione.utente.comune.nome }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold fs-sm">{{ transazione.quantita }} &euro;</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <a href="" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" title="" data-bs-original-title="Edit">
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {{ knp_pagination_render(transazioni) }}
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+
+{% endblock %}

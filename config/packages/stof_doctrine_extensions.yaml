@@ -1,0 +1,6 @@
+stof_doctrine_extensions:
+    default_locale: it_IT
+    orm:
+        default:
+            timestampable: true
+            loggable: true

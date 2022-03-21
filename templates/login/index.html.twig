@@ -3,6 +3,7 @@
 {% block title %}Login{% endblock %}
 
 {% block header %}{% endblock %}
+{% block body_class %}{% endblock %}
 {% block sidebar %}{% endblock %}
 {% block footer %}{% endblock %}
 
@@ -11,33 +12,30 @@
     <!-- Main Container -->
     <main id="main-container">
         <!-- Page Content -->
-        <div class="bg-image" style="background-image: url('assets/media/photos/photo28@2x.jpg');">
+        <div class="bg-image" style="background-image: url('{{ asset('build/images/photos/sfondo.jpg') }}');">
             <div class="row g-0 bg-primary-dark-op">
                 <!-- Meta Info Section -->
                 <div class="hero-static col-lg-4 d-none d-lg-flex flex-column justify-content-center">
                     <div class="p-4 p-xl-5 flex-grow-1 d-flex align-items-center">
                         <div class="w-100">
-                            <a class="link-fx fw-semibold fs-2 text-white" href="index.html">
-                                One<span class="fw-normal">UI</span>
+                            <a class="link-fx fw-semibold fs-2 text-white" href="{{ path('login') }}">
+                                Acque <span class="fw-normal">D'Italia</span>
                             </a>
                             <p class="text-white-75 me-xl-8 mt-2">
-                                Welcome to your amazing app. Feel free to login and start managing your projects and clients.
+                                Benvenuto. Effettua il login per gestire il tuo account.
                             </p>
                         </div>
                     </div>
                     <div class="p-4 p-xl-5 d-xl-flex justify-content-between align-items-center fs-sm">
                         <p class="fw-medium text-white-50 mb-0">
-                            <strong>OneUI 5.2</strong> &copy; <span data-toggle="year-copy"></span>
+                            <strong>Ecofill 0.3</strong> &copy; <span data-toggle="year-copy"></span>
                         </p>
                         <ul class="list list-inline mb-0 py-2">
                             <li class="list-inline-item">
-                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Legal</a>
+                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Privacy policy</a>
                             </li>
                             <li class="list-inline-item">
-                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Contact</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Terms</a>
+                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Contatti</a>
                             </li>
                         </ul>
                     </div>
@@ -47,8 +45,8 @@
                 <!-- Main Section -->
                 <div class="hero-static col-lg-8 d-flex flex-column align-items-center bg-body-light">
                     <div class="p-3 w-100 d-lg-none text-center">
-                        <a class="link-fx fw-semibold fs-3 text-dark" href="index.html">
-                            One<span class="fw-normal">UI</span>
+                        <a class="link-fx fw-semibold fs-3 text-dark" href="{{ path('login') }}">
+                            Acque <span class="fw-normal">D'Italia</span>
                         </a>
                     </div>
                     <div class="p-4 w-100 flex-grow-1 d-flex align-items-center">
@@ -59,10 +57,10 @@
                                     <i class="fa fa-2x fa-circle-notch text-primary-light"></i>
                                 </p>
                                 <h1 class="fw-bold mb-2">
-                                    Sign In
+                                    Benvenuto
                                 </h1>
                                 <p class="fw-medium text-muted">
-                                    Welcome, please login or <a href="op_auth_signup3.html">sign up</a> for a new account.
+                                    Effettua il login oppure <a href="{{ path('registrazione') }}">registrati</a> al servizio.
                                 </p>
                             </div>
                             <!-- END Header -->
@@ -73,7 +71,8 @@
                             <div class="row g-0 justify-content-center">
                                 <div class="col-sm-8 col-xl-4">
                                     {% if error %}
-                                        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                        <div></div>
+                                        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                                     {% endif %}
                                     <form class="js-validation-signin" action="{{ path('login') }}" method="POST">
                                         <div class="mb-4">
@@ -84,15 +83,15 @@
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center mb-4">
                                             <div>
-                                                <a class="text-muted fs-sm fw-medium d-block d-lg-inline-block mb-1" href="op_auth_reminder3.html">
-                                                    Forgot Password?
+                                                <a class="text-muted fs-sm fw-medium d-block d-lg-inline-block mb-1" href="{{ path('app_forgot_password_request') }}">
+                                                    Password dimenticata?
                                                 </a>
                                             </div>
                                             <div>
                                                 <input type="hidden" name="_target_path" value="/"/>
                                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                                                 <button type="submit" class="btn btn-lg btn-alt-primary">
-                                                    <i class="fa fa-fw fa-sign-in-alt me-1 opacity-50"></i> Sign In
+                                                    <i class="fa fa-fw fa-sign-in-alt me-1 opacity-50"></i> Login
                                                 </button>
                                             </div>
                                         </div>
@@ -104,17 +103,14 @@
                     </div>
                     <div class="px-4 py-3 w-100 d-lg-none d-flex flex-column flex-sm-row justify-content-between fs-sm text-center text-sm-start">
                         <p class="fw-medium text-black-50 py-2 mb-0">
-                            <strong>OneUI 5.2</strong> &copy; <span data-toggle="year-copy"></span>
+                            <strong>Ecofil 0.1</strong> &copy; <span data-toggle="year-copy"></span>
                         </p>
                         <ul class="list list-inline py-2 mb-0">
                             <li class="list-inline-item">
-                                <a class="text-muted fw-medium" href="javascript:void(0)">Legal</a>
+                                <a class="text-muted fw-medium" href="javascript:void(0)">Privacy policy</a>
                             </li>
                             <li class="list-inline-item">
-                                <a class="text-muted fw-medium" href="javascript:void(0)">Contact</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a class="text-muted fw-medium" href="javascript:void(0)">Terms</a>
+                                <a class="text-muted fw-medium" href="javascript:void(0)">Contatti</a>
                             </li>
                         </ul>
                     </div>

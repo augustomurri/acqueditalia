@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Erogazioni;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Erogazioni|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,27 +15,35 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ErogazioniRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Erogazioni::class);
+        $this->security = $security;
     }
 
-    // /**
-    //  * @return Erogazioni[] Returns an array of Erogazioni objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getErogazioni()
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $query = $this->createQueryBuilder('e')
+            ->select('e, te, s, p')
+            ->leftJoin('e.tessera', 'te')
+            ->leftJoin('te.utente', 'u')
+            ->leftJoin('e.prodotto', 'p')
+            ->leftJoin('e.stazione', 's')
+            ->groupBy('e, te, s, p')
+            ->orderBy('e.createdAt', 'DESC')
+            ->getQuery();
+
+        $utente = $this->security->getUser();
+
+        if ($this->security->isGranted('ROLE_GESTORE')) {
+            $query->andWhere('u.utente = :current_gestore');
+            $query->setParameter('current_gestore', $utente);
+        }
+
+        return $query;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Erogazioni

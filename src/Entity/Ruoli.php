@@ -22,6 +22,8 @@ class Ruoli extends Role
     private $id;
 
     /**
+     * Nome del ruolo
+     *
      * @ORM\Column(type="string", length=255)
      */
     private $nome;
@@ -36,9 +38,19 @@ class Ruoli extends Role
      */
     private $utenti;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $classe;
+
     public function __construct()
     {
         $this->utenti = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getNome();
     }
 
     public function getId(): ?int
@@ -104,6 +116,18 @@ class Ruoli extends Role
                 $utenti->setRuolo(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClasse(): ?string
+    {
+        return $this->classe;
+    }
+
+    public function setClasse(string $classe): self
+    {
+        $this->classe = $classe;
 
         return $this;
     }

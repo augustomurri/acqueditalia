@@ -35,14 +35,14 @@
 </head>
 <body>
 
-<div id="page-container">
+<div id="page-container" {% block body_class %}class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed main-content-narrow"{% endblock %}>
 
     {% block sidebar %}
-        {% include 'sidebar.html.twig' %}
+        {% include 'default/sidebar.html.twig' %}
     {% endblock %}
 
     {% block header %}
-        {% include 'header.html.twig' %}
+        {% include 'default/header.html.twig' %}
     {% endblock %}
 
     {% block body %}
@@ -88,7 +88,7 @@
     {% endblock %}
 
     {% block footer %}
-        {% include 'footer.html.twig' %}
+        {% include 'default/footer.html.twig' %}
     {% endblock %}
 
 </div>

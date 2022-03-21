@@ -5,20 +5,36 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ErogazioniRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ApiResource(
- *     itemOperations={"get"},
- *     collectionOperations={"get"}
+ *     collectionOperations={
+ *          "get"={
+ *               "path"="/erogazioni/"
+ *          },
+ *          "post"={
+                "path"="/erogazioni/",
+ *              "access_control"="is_granted('ROLE_ADMIN') || is_granted('ROLE_GESTORE')"
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *              "path"="/erogazioni/{id}"
+ *          }
+ *      },
  * )
  * @ORM\Entity(repositoryClass=ErogazioniRepository::class)
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Erogazioni
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
     private $id;
 
@@ -49,7 +65,29 @@ class Erogazioni
      */
     private $data_ora;
 
-    public function getId(): ?int
+    /**
+     * @ORM\ManyToOne(targetEntity=Stazioni::class, inversedBy="erogazioni")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $stazione;
+
+    /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     */
+    protected $deletedAt;
+
+
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -110,6 +148,35 @@ class Erogazioni
     public function setDataOra(\DateTimeInterface $data_ora): self
     {
         $this->data_ora = $data_ora;
+
+        return $this;
+    }
+
+    public function getStazione(): ?Stazioni
+    {
+        return $this->stazione;
+    }
+
+    public function setStazione(?Stazioni $stazione): self
+    {
+        $this->stazione = $stazione;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prodotti{% endblock %}
+
+{% block body %}
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <!-- Page Content -->
+        <div class="content">
+            <!-- Quick Overview + Actions -->
+            <div class="row">
+                <div class="col-6">
+                    <a class="block block-rounded block-link-shadow text-center" href="{{ path('prodotti') }}">
+                        <div class="block-content block-content-full">
+                            <div class="fs-2 fw-semibold text-dark">
+                                <i class="fa fa-arrow-rotate-left"></i>
+                            </div>
+                        </div>
+                        <div class="block-content py-2 bg-body-light">
+                            <p class="fw-medium fs-sm text-muted mb-0">
+                                Elenco comuni
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a class="block block-rounded block-link-shadow text-center" href="{{ path('prodotti_delete', { id: prodotto.id }) }}">
+                        <div class="block-content block-content-full">
+                            <div class="fs-2 fw-semibold text-danger">
+                                <i class="fa fa-times"></i>
+                            </div>
+                        </div>
+                        <div class="block-content py-2 bg-body-light">
+                            <p class="fw-medium fs-sm text-danger mb-0">
+                                Elimina
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- END Quick Overview + Actions -->
+
+            {% for flash_success in app.flashes('success') %}
+                <div class="alert alert-success" role="alert">{{ flash_success }}</div>
+            {% endfor %}
+
+            <!-- Info -->
+            <div class="block block-rounded">
+
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Informazioni</h3>
+                </div>
+                <div class="block-content">
+                    {{ form_start(form_prodotto) }}
+                    <div class="row push">
+                        <div class="col-lg-4">
+                            <p class="fs-sm text-muted">
+                                Dettagli del prodotto
+                            </p>
+                        </div>
+                        <div class="col-lg-8 col-xl-5">
+                            {{ form_row(form_prodotto.nome) }}
+                            {{ form_row(form_prodotto.prezzo_unitario) }}
+                            <div class="mb-4">
+                                <button type="submit" class="btn btn-alt-primary">
+                                    Aggiorna
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(form_prodotto) }}
+                </div>
+            </div>
+            <!-- END Info -->
+
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+
+{% endblock %}

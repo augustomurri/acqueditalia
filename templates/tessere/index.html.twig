@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tessere{% endblock %}
+
+{% block body %}
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <!-- Hero -->
+        <div class="bg-body-light">
+            <div class="content content-full">
+                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center py-2">
+                    <div class="flex-grow-1">
+                        <h1 class="h3 fw-bold mb-2">
+                            Tessere
+                        </h1>
+                        <h2 class="fs-base lh-base fw-medium text-muted mb-0">
+                            Elenco di tutte tessere in gestione
+                        </h2>
+                    </div>
+                    <nav class="flex-shrink-0 mt-3 mt-sm-0 ms-sm-3" aria-label="breadcrumb">
+                        {{ wo_render_breadcrumbs() }}
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- END Hero -->
+
+        <!-- Page Content -->
+        <div class="content">
+
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title"><small>Elenco tessere</small></h3>
+                </div>
+                <div class="block-content block-content-full">
+
+                    {% if tessere is defined %}
+                        <table class="table table-hover table-vcenter">
+                            <thead>
+                            <tr>
+                                <th class="d-none d-sm-table-cell">ID</th>
+                                <th class="d-none d-sm-table-cell">{{ knp_pagination_sortable(tessere, 'Proprietario', 'u.nome') }}</th>
+                                <th class="d-none d-sm-table-cell">Erogazioni</th>
+                                <th class="d-none d-sm-table-cell">Ultimo utilizzo</th>
+                                <th style="width: 5%;"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for tessera in tessere %}
+                                <tr>
+                                    <td class="text-muted fs-sm">{{ tessera.codice_tessera }}</td>
+                                    <td class="fw-semibold fs-sm">
+                                        <a href="#">{{ tessera.nome }} {{ tessera.cognome }}</a>
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold fs-sm">{{ tessera.totale_erogazioni }}</span>
+                                    </td>
+                                    <td class="text-muted fs-sm"></td>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <a href="" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" title="" data-bs-original-title="Edit">
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </a>
+                                            &nbsp;
+                                            <a href="" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" title="" data-bs-original-title="Edit">
+                                                <i class="fa fa-fw fa-pencil-alt"></i>
+                                            </a>
+                                            &nbsp;
+                                            <a href="" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" title="" data-bs-original-title="Edit">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {{ knp_pagination_render(tessere) }}
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+
+{% endblock %}

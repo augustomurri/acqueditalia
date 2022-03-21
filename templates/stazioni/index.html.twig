@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Stazioni{% endblock %}
+
+{% block body %}
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <!-- Hero -->
+        <div class="bg-body-light">
+            <div class="content content-full">
+                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center py-2">
+                    <div class="flex-grow-1">
+                        <h1 class="h3 fw-bold mb-2">
+                            Stazioni
+                        </h1>
+                        <h2 class="fs-base lh-base fw-medium text-muted mb-0">
+                            Elenco delle stazioni gestite
+                        </h2>
+                    </div>
+                    <nav class="flex-shrink-0 mt-3 mt-sm-0 ms-sm-3" aria-label="breadcrumb">
+                        {{ wo_render_breadcrumbs() }}
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- END Hero -->
+
+        <!-- Page Content -->
+        <div class="content">
+
+            <!-- Quick Overview -->
+            <div class="row">
+                <div class="col-6 col-lg-4">
+                    <a class="block block-rounded block-link-shadow text-center" href="{{ path('stazioni_add') }}">
+                        <div class="block-content block-content-full">
+                            <div class="fs-2 fw-semibold text-success">
+                                <i class="fa fa-plus"></i>
+                            </div>
+                        </div>
+                        <div class="block-content py-2 bg-body-light">
+                            <p class="fw-medium fs-sm text-success mb-0">
+                                Aggiungi stazione
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-lg-4">
+                    <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
+                        <div class="block-content block-content-full">
+                            <div class="fs-2 fw-semibold text-info">24</div>
+                        </div>
+                        <div class="block-content py-2 bg-body-light">
+                            <p class="fw-medium fs-sm text-info mb-0">
+                                Totale erogazioni
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-lg-4">
+                    <a class="block block-rounded block-link-shadow text-center" href="be_pages_ecom_dashboard.html">
+                        <div class="block-content block-content-full">
+                            <div class="fs-2 fw-semibold text-dark">260</div>
+                        </div>
+                        <div class="block-content py-2 bg-body-light">
+                            <p class="fw-medium fs-sm text-muted mb-0">
+                                Stazioni totali
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- END Quick Overview -->
+
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title"><small>Elenco stazioni</small></h3>
+                </div>
+                <div class="block-content block-content-full">
+                    {% if stazioni is defined %}
+                        <table class="table table-hover table-vcenter">
+                            <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th class="d-none d-sm-table-cell">Comune</th>
+                                <th class="d-none d-sm-table-cell">Erogazioni</th>
+                                <th style="width: 5%;">Opzioni</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for stazione in stazioni %}
+                                <tr>
+                                    <td class="fw-semibold fs-sm">{{ stazione[0].nome }}</td>
+                                    <td>
+                                        <span class="text-muted fs-sm">{{ stazione[0].comune.nome }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted fs-sm">{{ stazione.totale_erogazioni }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <a href="{{ path('stazioni_detail', { id: stazione[0].id }) }}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" title="" data-bs-original-title="Edit">
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </a>
+                                            &nbsp;
+                                            <a href="{{ path('stazioni_edit', { id: stazione[0].id }) }}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" title="" data-bs-original-title="Edit">
+                                                <i class="fa fa-fw fa-pencil-alt"></i>
+                                            </a>
+                                            &nbsp;
+                                            <a href="{{ path('stazioni_delete', { id: stazione[0].id }) }}" type="button" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" title="" data-bs-original-title="Delete">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {{ knp_pagination_render(stazioni) }}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+
+{% endblock %}

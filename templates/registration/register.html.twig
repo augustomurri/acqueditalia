@@ -3,6 +3,7 @@
 {% block title %}Register{% endblock %}
 
 {% block header %}{% endblock %}
+{% block body_class %}{% endblock %}
 {% block sidebar %}{% endblock %}
 {% block footer %}{% endblock %}
 
@@ -10,33 +11,30 @@
     <!-- Main Container -->
     <main id="main-container">
         <!-- Page Content -->
-        <div class="bg-primary-dark">
+        <div class="bg-image" style="background-image: url('{{ asset('build/images/photos/sfondo.jpg') }}');">
             <div class="row g-0 bg-primary-dark-op">
                 <!-- Meta Info Section -->
                 <div class="hero-static col-lg-4 d-none d-lg-flex flex-column justify-content-center">
                     <div class="p-4 p-xl-5 flex-grow-1 d-flex align-items-center">
                         <div class="w-100">
                             <a class="link-fx fw-semibold fs-2 text-white" href="index.html">
-                                One<span class="fw-normal">UI</span>
+                                Acque <span class="fw-normal">D'Italia</span>
                             </a>
                             <p class="text-white-75 me-xl-8 mt-2">
-                                Creating a new account is completely free. Get started with 5 projects to manage and feel free to upgrade as your business grow.
+                                Creare un account è facilissimo. Inserisci i tuoi dati e clicca nel link di conferma che riceverai sulla casella di posta.
                             </p>
                         </div>
                     </div>
                     <div class="p-4 p-xl-5 d-xl-flex justify-content-between align-items-center fs-sm">
                         <p class="fw-medium text-white-50 mb-0">
-                            <strong>OneUI 5.2</strong> &copy; <span data-toggle="year-copy"></span>
+                            <strong>Ecofil 0.1</strong> &copy; <span data-toggle="year-copy"></span>
                         </p>
                         <ul class="list list-inline mb-0 py-2">
                             <li class="list-inline-item">
-                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Legal</a>
+                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Privacy policy</a>
                             </li>
                             <li class="list-inline-item">
-                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Contact</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Terms</a>
+                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Contatti</a>
                             </li>
                         </ul>
                     </div>
@@ -58,10 +56,10 @@
                                     <i class="fa fa-2x fa-circle-notch text-primary-light"></i>
                                 </p>
                                 <h1 class="fw-bold mb-2">
-                                    Create Account
+                                    Crea il tuo Account
                                 </h1>
                                 <p class="fw-medium text-muted">
-                                    Get your access today in one easy step
+                                    Accedi ai nostri servizi e gestisci il tuo account.<br />Se sei già iscritto esegui il <a href="{{ path('login') }}">login</a>
                                 </p>
                             </div>
                             <!-- END Header -->
@@ -75,41 +73,34 @@
                                         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
                                     {% endfor %}
 
-                                    {#
-                                    {{ form_row(registrationForm.plainPassword, {
-                                        label: 'Password'
-                                    }) }}
-                                    #}
+                                    {% for flash_success in app.flashes('verify_email_success') %}
+                                        <div class="alert alert-success" role="alert">{{ flash_success }}</div>
+                                    {% endfor %}
 
                                     {{ form_start(registrationForm, {'class': 'js-validation-signup'}) }}
                                         <div class="mb-4">
                                             {{ form_row(registrationForm.email,
                                                 { 'attr' :
                                                     {
-                                                        'class': 'form-control form-control-lg form-control-alt py-3',
+                                                        'class': 'forms-control forms-control-lg forms-control-alt py-3',
                                                         'id': 'signup-email'
                                                     },
                                                 })
                                             }}
                                         </div>
-                                        <div class="mb-4">
-                                            <input type="password" class="form-control form-control-lg form-control-alt py-3" id="signup-password" name="signup-password" placeholder="Password">
-                                        </div>
-                                        <div class="mb-4">
-                                            <input type="password" class="form-control form-control-lg form-control-alt py-3" id="signup-password-confirm" name="signup-password-confirm" placeholder="Confirm Password">
-                                        </div>
+                                        {{ form_row(registrationForm.password) }}
                                         <div class="mb-4">
                                             <div class="d-md-flex align-items-md-center justify-content-md-between">
                                                 <div class="form-check">
-                                                    {{ form_row(registrationForm.agreeTerms,
+                                                    {{ form_row(registrationForm.condizioni,
                                                         { 'attr' :
                                                             {
-                                                                'class': 'form-check-input',
+                                                                'class': 'forms-check-input',
                                                                 'id': 'signup-email'
                                                             },
+                                                            'label': 'Acconsento'
                                                         })
                                                     }}
-                                                    <label class="form-check-label" for="signup-terms">I agree to Terms &amp; Conditions</label>
                                                 </div>
                                                 <div class="py-2">
                                                     <a class="fs-sm fw-medium" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#one-signup-terms">Termini e condizioni</a>
@@ -129,7 +120,7 @@
                     </div>
                     <div class="px-4 py-3 w-100 d-lg-none d-flex flex-column flex-sm-row justify-content-between fs-sm text-center text-sm-start">
                         <p class="fw-medium text-black-50 py-2 mb-0">
-                            <strong>OneUI 5.2</strong> &copy; <span data-toggle="year-copy"></span>
+                            <strong>Ecofil 0.1</strong> &copy; <span data-toggle="year-copy"></span>
                         </p>
                         <ul class="list list-inline py-2 mb-0">
                             <li class="list-inline-item">
@@ -137,9 +128,6 @@
                             </li>
                             <li class="list-inline-item">
                                 <a class="text-muted fw-medium" href="javascript:void(0)">Contatti</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a class="text-muted fw-medium" href="javascript:void(0)">Termini e condizioni</a>
                             </li>
                         </ul>
                     </div>
@@ -168,8 +156,8 @@
                                 <p>Dolor posuere proin blandit accumsan senectus netus nullam curae, ornare laoreet adipiscing luctus mauris adipiscing pretium eget fermentum, tristique lobortis est ut metus lobortis tortor tincidunt himenaeos habitant quis dictumst proin odio sagittis purus mi, nec taciti vestibulum quis in sit varius lorem sit metus mi.</p>
                             </div>
                             <div class="block-content block-content-full text-end bg-body">
-                                <button type="button" class="btn btn-sm btn-alt-secondary me-1" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">I Agree</button>
+                                <button type="button" class="btn btn-sm btn-alt-secondary me-1" data-bs-dismiss="modal">Chiudi</button>
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Acconsento</button>
                             </div>
                         </div>
                     </div>

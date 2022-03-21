@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recupero password email inviata{% endblock %}
+
+{% block header %}{% endblock %}
+{% block body_class %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <!-- Page Content -->
+        <div class="bg-image" style="background: url('{{ asset('build/images/photos/photo28@2x.jpg') }}');">
+            <div class="row g-0 bg-primary-dark-op">
+                <!-- Meta Info Section -->
+                <div class="hero-static col-lg-4 d-none d-lg-flex flex-column justify-content-center">
+                    <div class="p-4 p-xl-5 flex-grow-1 d-flex align-items-center">
+                        <div class="w-100">
+                            <a class="link-fx fw-semibold fs-2 text-white" href="{{ path('login') }}">
+                                Acque <span class="fw-normal">D'Italia</span>
+                            </a>
+                            <p class="text-white-75 me-xl-8 mt-2">
+                                Recupera la password per accedere al tuo account
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-4 p-xl-5 d-xl-flex justify-content-between align-items-center fs-sm">
+                        <p class="fw-medium text-white-50 mb-0">
+                            <strong>Ecofill 0.3</strong> &copy; <span data-toggle="year-copy"></span>
+                        </p>
+                        <ul class="list list-inline mb-0 py-2">
+                            <li class="list-inline-item">
+                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Privacy policy</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a class="text-white-75 fw-medium" href="javascript:void(0)">Contatti</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- END Meta Info Section -->
+
+                <!-- Main Section -->
+                <div class="hero-static col-lg-8 d-flex flex-column align-items-center bg-body-light">
+                    <div class="p-3 w-100 d-lg-none text-center">
+                        <a class="link-fx fw-semibold fs-3 text-dark" href="{{ path('login') }}">
+                            Acque <span class="fw-normal">D'Italia</span>
+                        </a>
+                    </div>
+                    <div class="p-4 w-100 flex-grow-1 d-flex align-items-center">
+                        <div class="w-100">
+                            <!-- Header -->
+                            <div class="text-center mb-5">
+                                <p class="mb-3">
+                                    <i class="fa fa-2x fa-circle-notch text-primary-light"></i>
+                                </p>
+                                <h1 class="fw-bold mb-2">
+                                    Email inviata
+                                </h1>
+                                <p class="fw-medium text-muted">
+                                    Abbiamo inviato le istruzioni sulla tua email.<br />
+                                    Il link per resettare la password scadrà tra {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+                                <p>
+                                <p class="fw-medium text-muted">
+                                    Se non hai ricevuto l'email controlla nello spam, altrimenti <a href="{{ path('app_forgot_password_request') }}">prova di nuovo</a>.</p>
+                                </p>
+                            </div>
+                            <!-- END Header -->
+
+                        </div>
+                    </div>
+                    <div class="px-4 py-3 w-100 d-lg-none d-flex flex-column flex-sm-row justify-content-between fs-sm text-center text-sm-start">
+                        <p class="fw-medium text-black-50 py-2 mb-0">
+                            <strong>Ecofil 0.1</strong> &copy; <span data-toggle="year-copy"></span>
+                        </p>
+                        <ul class="list list-inline py-2 mb-0">
+                            <li class="list-inline-item">
+                                <a class="text-muted fw-medium" href="javascript:void(0)">Privacy policy</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a class="text-muted fw-medium" href="javascript:void(0)">Contatti</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- END Main Section -->
+            </div>
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+{% endblock %}

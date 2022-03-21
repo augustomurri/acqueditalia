@@ -5,17 +5,34 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\TransazioniRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"={
+ *               "path"="/transazioni/"
+ *          },
+ *          "post"={
+                "path"="/transazioni/",
+ *              "access_control"="is_granted('ROLE_ADMIN') || is_granted('ROLE_GESTORE')"
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get"={"path"="/transazioni/{id}"}
+ *      },
+ * )
  * @ORM\Entity(repositoryClass=TransazioniRepository::class)
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Transazioni
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
     private $id;
 
@@ -26,16 +43,41 @@ class Transazioni
     private $operatore;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Utenti::class, inversedBy="accrediti")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $utente;
+
+
+    /**
      * @ORM\Column(type="float")
      */
     private $quantita;
 
     /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
-    private $data_ora;
+    private $createdAt;
 
-    public function getId(): ?int
+    /**
+     * @var \DateTime $updated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     */
+    protected $deletedAt;
+
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -64,14 +106,42 @@ class Transazioni
         return $this;
     }
 
-    public function getDataOra(): ?\DateTimeInterface
+    public function getUtente(): ?Utenti
     {
-        return $this->data_ora;
+        return $this->utente;
     }
 
-    public function setDataOra(\DateTimeInterface $data_ora): self
+    public function setUtente(?Utenti $utente): self
     {
-        $this->data_ora = $data_ora;
+        $this->utente = $utente;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

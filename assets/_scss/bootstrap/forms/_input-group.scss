@@ -5,7 +5,7 @@
 .input-group {
   position: relative;
   display: flex;
-  flex-wrap: wrap; // For form validation feedback
+  flex-wrap: wrap; // For forms validation feedback
   align-items: stretch;
   width: 100%;
 
@@ -17,7 +17,7 @@
     min-width: 0; // https://stackoverflow.com/questions/36247140/why-dont-flex-items-shrink-past-content-size
   }
 
-  // Bring the "active" form control to the top of surrounding elements
+  // Bring the "active" forms control to the top of surrounding elements
   > .form-control:focus,
   > .form-select:focus {
     z-index: 3;
@@ -60,7 +60,7 @@
 
 // Sizing
 //
-// Remix the default form control sizing classes into new ones for easier
+// Remix the default forms control sizing classes into new ones for easier
 // manipulation.
 
 .input-group-lg > .form-control,
